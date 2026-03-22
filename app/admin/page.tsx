@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase"; 
+import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
   const [title, setTitle] = useState("");
@@ -16,12 +17,20 @@ export default function AdminDashboard() {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     
+    // Custom Validation Step 1: Check text fields
+    if (!title || !videoLink || !codeSnippet) {
+      toast.error("Please fill out all text fields!");
+      return;
+    }
+
+    // Custom Validation Step 2: Check images
     if (!diagram || !thumbnail) {
-      alert("Please upload BOTH a wiring diagram and a thumbnail!");
+      toast.error("Please upload BOTH a wiring diagram and a thumbnail!");
       return;
     }
 
     setIsUploading(true); 
+    toast.loading("Uploading Data & Images...", { id: "upload-toast" }); 
 
     try {
       // 1. Upload the Custom Thumbnail
@@ -66,7 +75,8 @@ export default function AdminDashboard() {
       if (dbError) throw dbError;
 
       console.log("Uploaded successfully!");
-      alert("Project & Thumbnail uploaded Successfully!");
+      // Dismiss the loading toast and show a success checkmark
+      toast.success("Project & Thumbnail published!", { id: "upload-toast" });
 
       // 4. Clear the form
       setTitle("");
@@ -77,7 +87,8 @@ export default function AdminDashboard() {
       
     } catch (error: any) {
       console.error("Error uploading:", error.message);
-      alert(`Error uploading: ${error.message}`);
+      // Dismiss the loading toast and show an error X
+      toast.error(`Upload failed: ${error.message}`, { id: "upload-toast" });
     } finally {
       setIsUploading(false); 
     }
@@ -98,7 +109,7 @@ export default function AdminDashboard() {
               onChange={(e) => setTitle(e.target.value)}
               className="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="e.g., Obstacle Avoiding Robot"
-              required
+              /* REMOVED: required tag */
             />
           </div>
 
@@ -111,7 +122,7 @@ export default function AdminDashboard() {
               onChange={(e) => setVideoLink(e.target.value)}
               className="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="https://instagram.com/reel/..."
-              required
+              /* REMOVED: required tag */
             />
           </div>
 
@@ -123,7 +134,7 @@ export default function AdminDashboard() {
               onChange={(e) => setCodeSnippet(e.target.value)}
               className="w-full p-2.5 border border-gray-300 rounded-lg h-48 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="Paste your C++ code here..."
-              required
+              /* REMOVED: required tag */
             />
           </div>
 
@@ -136,7 +147,7 @@ export default function AdminDashboard() {
               accept="image/*"
               onChange={(e) => setThumbnail(e.target.files ? e.target.files[0] : null)}
               className="w-full p-2 bg-white border border-blue-200 rounded-md text-gray-900 text-sm"
-              required
+              /* REMOVED: required tag */
             />
           </div>
 
@@ -149,7 +160,7 @@ export default function AdminDashboard() {
               accept="image/*"
               onChange={(e) => setDiagram(e.target.files ? e.target.files[0] : null)}
               className="w-full p-2 bg-white border border-gray-300 rounded-md text-gray-900 text-sm"
-              required
+              /* REMOVED: required tag */
             />
           </div>
 
