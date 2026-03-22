@@ -1,4 +1,6 @@
 import { supabase } from "@/lib/supabase";
+import CodeBlock from "@/components/CodeBlock";
+import ZoomableImage from "@/components/ZoomableImage";
 import Link from "next/link";
 
 // Update: In Next.js 15+, params is a Promise that must be awaited
@@ -51,23 +53,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         {/* Wiring Diagram */}
         <div className="mb-8">
           <h2 className="text-xl font-bold mb-3 border-b pb-2">Wiring Diagram</h2>
-          <img 
+          <ZoomableImage 
             src={project.diagram_url} 
-            alt={`Wiring diagram for ${project.title}`}
-            className="w-full rounded-lg border border-gray-200"
+            alt={`Wiring diagram for ${project.title}`} 
           />
         </div>
-
         {/* Arduino Code */}
         <div>
           <h2 className="text-xl font-bold mb-3 border-b pb-2">Arduino Code</h2>
-          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-            <pre className="text-green-400 font-mono text-sm">
-              <code>{project.code_snippet}</code>
-            </pre>
-          </div>
+          <CodeBlock code={project.code_snippet} />
         </div>
-
       </div>
     </div>
   );
