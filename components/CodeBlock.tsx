@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Copy, Check } from "lucide-react";
 
 export default function CodeBlock({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
@@ -9,27 +12,50 @@ export default function CodeBlock({ code }: { code: string }) {
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset button after 2 seconds
+      setTimeout(() => setCopied(false), 2000); 
     } catch (err) {
       console.error("Failed to copy code", err);
     }
   };
 
   return (
-    <div className="relative group">
-      {/* The Copy Button */}
-      <button
-        onClick={handleCopy}
-        className="absolute top-2 right-2 bg-gray-800 text-gray-300 hover:text-white px-3 py-1 rounded-md text-sm transition-colors border border-gray-600 z-10"
-      >
-        {copied ? "Copied!" : "Copy Code"}
-      </button>
+    <div className="relative group rounded-xl overflow-hidden border border-gray-800 bg-[#1e1e1e] shadow-xl font-mono">
+      
+      {/* Premium Mac-style Window Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-[#2d2d2d] border-b border-gray-700">
+        <div className="flex gap-2">
+          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+        </div>
+        <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">Arduino / C++</span>
+        
+        {/* Interactive Copy Button */}
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-md"
+        >
+          {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+          {copied ? "Copied!" : "Copy"}
+        </button>
+      </div>
 
-      {/* The Code Display */}
-      <div className="bg-gray-900 rounded-lg p-4 pt-10 overflow-x-auto relative">
-        <pre className="text-green-400 font-mono text-sm">
-          <code>{code}</code>
-        </pre>
+      {/* The Syntax Highlighted Code */}
+      <div className="text-sm max-h-[500px] overflow-y-auto custom-scrollbar">
+        <SyntaxHighlighter 
+          language="cpp" 
+          style={vscDarkPlus}
+          customStyle={{
+            margin: 0,
+            padding: '1.5rem',
+            background: 'transparent',
+            fontSize: '0.875rem',
+            lineHeight: '1.5',
+          }}
+          showLineNumbers={true}
+        >
+          {code}
+        </SyntaxHighlighter>
       </div>
     </div>
   );
