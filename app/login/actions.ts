@@ -23,3 +23,10 @@ export async function authenticate(username: string, password: string) {
   
   return { success: false };
 }
+
+// NEW LOGOUT FUNCTION
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("admin_token");
+  return { success: true };
+}
