@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Tell Tailwind v4 to listen to our next-themes toggle button! */
+@custom-variant dark (&:where(.dark, .dark *));
+
 
 /* 1. Define our Custom SaaS Brand Colors */
 @theme {
@@ -17,6 +20,11 @@
 }
 
 /* 3. Dark Mode Variables */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+/* We also keep the media query as a fallback */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

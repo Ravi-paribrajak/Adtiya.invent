@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import { Toaster } from "react-hot-toast"; // NEW IMPORT
+import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/ThemeProvider"; // NEW IMPORT
 
 export const metadata: Metadata = {
   title: "Ravi's Code & Diagram Hub",
@@ -14,23 +15,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased bg-gray-50 text-gray-950 pt-24 pb-12">
-        <Navbar />
-        
-        {/* The Toaster Container - we set it to bottom-center for a mobile-friendly feel */}
-        <Toaster 
-          position="bottom-center" 
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: '#333',
-              color: '#fff',
-            },
-          }} 
-        />
-        
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      {/* Note: suppressHydrationWarning is required by next-themes on the HTML tag */}
+      <body className="antialiased bg-gray-50 dark:bg-[#0a0a0a] text-gray-950 dark:text-gray-100 pt-24 pb-12 transition-colors duration-300">
+        <ThemeProvider>
+          <Navbar />
+          <Toaster 
+            position="bottom-center" 
+            toastOptions={{
+              duration: 3000,
+              style: { background: '#333', color: '#fff' },
+            }} 
+          />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
