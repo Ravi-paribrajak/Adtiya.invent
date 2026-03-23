@@ -34,7 +34,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
   const componentsList = project.components ? project.components.split('\n').filter((c: string) => c.trim() !== '') : [];
 
   return (
-    // Reduced top/bottom padding on mobile (pt-24 pb-16) to save screen real estate
     <main className="min-h-screen p-4 md:p-8 pt-24 md:pt-32 pb-16 md:pb-24 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         
@@ -49,7 +48,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
         {/* Hero Section of the Project */}
         <div className="mb-10 md:mb-16 border-b border-gray-200/50 dark:border-gray-800/50 pb-8 md:pb-10">
-          {/* Smoother responsive text scaling */}
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight leading-tight">
             {project.title}
           </h1>
@@ -65,7 +63,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 href={project.video_link} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                // w-full on mobile, auto width on desktop. Center text on mobile!
                 className="group flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500 border border-red-500/20 hover:border-red-500 text-red-600 dark:text-red-400 hover:text-white font-bold px-5 py-2.5 rounded-xl transition-all duration-300 shadow-sm hover:shadow-red-500/25 w-full sm:w-auto"
               >
                 <YoutubeIcon className="group-hover:scale-110 transition-transform" /> Watch Tutorial
@@ -75,7 +72,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* THE SAAS DESKTOP GRID */}
-        {/* Tighter gap on mobile (gap-8 vs gap-10) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
           
           {/* LEFT COLUMN */}
@@ -87,7 +83,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 <CircuitBoard className="text-blue-500" size={24} /> 
                 Wiring Schematic
               </h2>
-              {/* Responsive rounded corners and padding */}
               <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-[1.5rem] md:rounded-[2rem] p-2 md:p-3 shadow-xl shadow-gray-200/20 dark:shadow-none border border-white/50 dark:border-gray-700/50">
                 <ZoomableImage src={project.diagram_url} alt={`${project.title} wiring diagram`} />
               </div>
@@ -99,17 +94,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 <Cpu className="text-purple-500" size={24} /> 
                 Hardware Required
               </h2>
-              {/* Responsive rounded corners and padding */}
               <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 shadow-xl shadow-gray-200/20 dark:shadow-none border border-white/50 dark:border-gray-700/50">
                 {componentsList.length > 0 ? (
-                  // Tighter gap on mobile (gap-3 instead of 4)
                   <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {componentsList.map((item: string, index: number) => (
                       <li key={index} className="flex items-center gap-3 bg-white/50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 rounded-xl p-2.5 sm:p-3 shadow-sm hover:shadow-md transition-shadow">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-purple-500 to-blue-500 flex items-center justify-center flex-shrink-0 shadow-inner">
                           <Cpu size={16} className="text-white" />
                         </div>
-                        {/* Smaller font size on mobile */}
                         <span className="font-semibold text-sm sm:text-base text-gray-800 dark:text-gray-200">{item}</span>
                       </li>
                     ))}
@@ -132,16 +124,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                 Source Code
               </h2>
               
+              {/* Removed the redundant inner header, letting CodeBlock handle it! */}
               <div className="relative group">
                 <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500 hidden lg:block"></div>
-                {/* Fixed border radius scaling */}
-                <div className="relative shadow-2xl rounded-xl md:rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/60 bg-[#1e1e1e]">
-                  <div className="bg-[#2d2d2d] px-3 md:px-4 py-2.5 md:py-3 flex items-center gap-2 border-b border-gray-700/50">
-                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-red-500/80"></div>
-                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-yellow-500/80"></div>
-                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500/80"></div>
-                    <span className="ml-2 text-[10px] md:text-xs text-gray-400 font-mono tracking-wider">main.cpp</span>
-                  </div>
+                <div className="relative shadow-2xl rounded-xl md:rounded-2xl overflow-hidden">
                   <CodeBlock code={project.code_snippet} />
                 </div>
               </div>

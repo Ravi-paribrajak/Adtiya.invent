@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
-import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "@/components/ThemeProvider"; // NEW IMPORT
 import BackgroundDots from "@/components/BackgroundDots";
+import { Toaster } from "react-hot-toast";
+import { GoogleAnalytics } from '@next/third-parties/google';
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Ravi's Code & Diagram Hub",
-  description: "Arduino project codes, wiring diagrams, and tutorials.",
+  title: "Adtiya.invents | Official Project Hub",
+  description: "The master archive for exact C++ source codes, high-resolution wiring diagrams, and component blueprints.",
 };
-
-// This tells mobile browsers to match their top UI bar to your app's background!
-export const themeColor = [
-  { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
-  { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
-];
 
 export default function RootLayout({
   children,
@@ -23,21 +21,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      {/* Note: suppressHydrationWarning is required by next-themes on the HTML tag */}
-      <body className="antialiased bg-gray-50 dark:bg-[#0a0a0a] text-gray-950 dark:text-gray-100 pt-24 pb-12 transition-colors duration-300">
+      {/* Google AdSense Script */}
+      <head>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossOrigin="anonymous"></script>
+      </head>
+      <body className={`${inter.className} antialiased bg-gray-50 dark:bg-[#0a0a0a] text-gray-950 dark:text-gray-100 transition-colors duration-300`}>
         <ThemeProvider>
+          <BackgroundDots />
           <Navbar />
           <Toaster 
             position="bottom-center" 
             toastOptions={{
               duration: 3000,
-              style: { background: '#333', color: '#fff' },
+              style: { background: '#333', color: '#fff', borderRadius: '16px' },
             }} 
           />
           {children}
-          <BackgroundDots />
-
         </ThemeProvider>
+        
+        {/* Google Analytics Tag */}
+        <GoogleAnalytics gaId="G-XXXXXXXXXX" />
       </body>
     </html>
   );
