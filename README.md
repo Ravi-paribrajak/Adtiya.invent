@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Code & Diagram Hub
 
-## Getting Started
+A premium, high-performance web platform built to share C++ code snippets, wiring diagrams, and project tutorials. Designed with a mobile-first, SaaS-level user experience to seamlessly convert social media traffic into engaged platform users.
 
-First, run the development server:
+## 🚀 Tech Stack
 
+This project is built on the bleeding edge of modern web development:
+
+* **Framework:** Next.js 16 (App Router)
+* **Core Library:** React 19
+* **Styling:** Tailwind CSS v4 (CSS-first architecture)
+* **Database & Auth:** Supabase (PostgreSQL)
+* **Storage:** Supabase Storage Buckets
+* **Animations:** Framer Motion
+* **Icons:** Lucide React
+
+## ✨ Key Features
+
+* **Premium UI/UX:** Glassmorphic navigation, smooth hover physics, and Framer Motion page reveals.
+* **System-Aware Dark Mode:** Flawless light/dark theme toggling using `next-themes` that respects user OS preferences.
+* **Optimized Image Delivery:** Next.js `<Image>` components with custom NAT64 bypass routing for lightning-fast, lazy-loaded custom thumbnails and circuit diagrams.
+* **Developer-First Code Blocks:** Native VS Code styling (`react-syntax-highlighter`) with C++ syntax highlighting, line numbers, and a 1-click "Copy Code" interactive button.
+* **Perceived Performance:** Implementation of `loading.tsx` skeleton loaders to eliminate layout shift and blank screens during database fetching.
+* **Custom Admin Control Center:** Secure, multi-file upload dashboard for publishing new projects (Thumbnail + Diagram) with React Hot Toast state feedback and custom client-side validation.
+
+## 🛠️ Getting Started Locally
+
+To run this project on your local machine, follow these steps:
+
+### 1. Clone and Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone <your-repo-url>
+cd code-and-diagram-hub
+npm install
