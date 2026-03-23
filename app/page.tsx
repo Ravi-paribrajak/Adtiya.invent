@@ -1,7 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { Calendar, ChevronRight } from "lucide-react";
+import { Calendar, ChevronRight, Mail, Sparkles, FolderOpen } from "lucide-react";
 import Image from "next/image";
+import ProjectFeed from "@/components/ProjectFeed"; // NEW IMPORT
 
 export const revalidate = 0; 
 
@@ -15,71 +16,102 @@ export default async function Home() {
     console.error("Error fetching projects:", error);
   }
 
+  // Split the data: 1 for the Hero Card, the rest for the Bento Grid
+  const heroProject = projects?.[0];
+  const gridProjects = projects?.slice(1) || [];
+
   return (
     <main className="min-h-screen p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
+      {/* 1. Upgraded Container: max-w-2xl is now max-w-7xl for Desktop! */}
+      <div className="max-w-7xl mx-auto">
         
-        {/* Premium Profile Header */}
-        <div className="text-center mb-10 pt-4">
-          <div className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4">
-            Latest Projects
+        {/* 1. Premium Profile Header */}
+        <div className="text-center mb-16 pt-4">
+          <div className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4 border border-blue-200 dark:border-blue-800">
+            Developer Hub
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-950 mb-4 tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-950 dark:text-white mb-4 tracking-tight">
             Code & Diagram Hub
           </h1>
-          <p className="text-gray-500 text-lg">
+          <p className="text-gray-500 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
             Grab the exact C++ code and wiring diagrams from my tutorials.
           </p>
         </div>
 
-        {/* Upgraded Project Feed */}
-        <div className="space-y-6">
-          {projects?.map((project) => (
-            <Link href={`/project/${project.id}`} key={project.id} className="block group">
-              <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col sm:flex-row gap-6 items-center">
+        {/* 2. THE HERO CARD (Pinned Latest Project) */}
+        {heroProject && (
+          <div className="mb-16">
+            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
+              <Sparkles className="text-blue-500" size={24} /> 
+              Latest Release
+            </h2>
+            
+            <Link href={`/project/${heroProject.id}`} className="block group">
+              <div className="bg-white dark:bg-gray-900 rounded-3xl p-4 md:p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 flex flex-col md:flex-row gap-8 items-center">
                 
-                {/* Optimized Thumbnail Image (With Fallback!) */}
-                <div className="relative w-full sm:w-40 h-40 sm:h-28 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+                {/* Huge Desktop Thumbnail */}
+                <div className="relative w-full md:w-3/5 aspect-video flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
                   <Image 
-                    src={project.thumbnail_url || project.diagram_url} 
-                    alt={project.title}
+                    src={heroProject.thumbnail_url || heroProject.diagram_url} 
+                    alt={heroProject.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, 160px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    priority
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   />
                 </div>
 
-                {/* Card Content */}
-                <div className="flex-grow w-full flex flex-col justify-center">
-                  <h2 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors mb-2 line-clamp-2">
-                    {project.title}
-                  </h2>
+                {/* Hero Content */}
+                <div className="flex-grow w-full flex flex-col justify-center py-4">
+                  <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-4 line-clamp-3">
+                    {heroProject.title}
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 mb-8 line-clamp-2">
+                    Click to view the complete C++ source code, components list, and high-resolution wiring diagram.
+                  </p>
                   
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar size={14} className="text-gray-400" />
-                      {new Date(project.created_at).toLocaleDateString(undefined, { 
-                        month: 'short', 
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
+                  <div className="flex items-center gap-6 mt-auto">
+                    <span className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium">
+                      <Calendar size={18} />
+                      {new Date(heroProject.created_at).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
                     </span>
-                    <span className="flex items-center gap-1 text-blue-600 font-medium ml-auto group-hover:translate-x-1 transition-transform">
-                      View Code <ChevronRight size={16} />
+                    <span className="flex items-center gap-1.5 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold ml-auto group-hover:bg-blue-700 transition-colors shadow-sm group-hover:shadow-md">
+                      View Project <ChevronRight size={18} />
                     </span>
                   </div>
                 </div>
 
               </div>
             </Link>
-          ))}
+          </div>
+        )}
 
-          {projects?.length === 0 && (
-            <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
-              <p className="text-gray-500">No projects uploaded yet.</p>
-            </div>
-          )}
-        </div>
+        {/* 3. THE BENTO GRID & SEARCH (Replaced with our Client Component!) */}
+        {gridProjects.length > 0 && (
+          <ProjectFeed projects={gridProjects} />
+        )}
+
+        {/* 4. THE DEVELOPER FOOTER */}
+        <footer className="mt-24 border-t border-gray-200 dark:border-gray-800 pt-16 pb-12 flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-6 shadow-sm rotate-3 hover:rotate-0 transition-transform duration-300">
+            <Mail size={32} />
+          </div>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
+            Let's build something.
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-8 text-lg">
+            Open for freelance projects, technical writing, and brand sponsorships. 
+          </p>
+          <a 
+            href="mailto:paribrajakravishankarkumar@gmail.com" 
+            target = "_blank"
+            className="group relative inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <Mail size={20} /> Contact Me
+            </span>
+          </a>
+        </footer>
 
       </div>
     </main>
