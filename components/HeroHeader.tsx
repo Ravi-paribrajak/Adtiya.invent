@@ -22,15 +22,15 @@ export default function HeroHeader() {
   }, []);
 
   return (
-    // Increased pt-8 to pt-24 (mobile) and pt-32 (desktop) to clear the navbar
-    <div className="text-center mb-16 md:mb-20 pt-24 md:pt-32">
+    // Adjusted pt-14 (mobile) and pt-20 (desktop) for a balanced "S-Class" gap
+    <div className="text-center mb-16 md:mb-20 pt-14 md:pt-20">
       {/* Animated Status Pill */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        // Added mt-4 to ensure extra clearance from the floating navbar
-        className="inline-flex items-center gap-2 bg-blue-50/50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-widest uppercase mb-6 border border-blue-200/50 dark:border-blue-800/50 backdrop-blur-md shadow-sm mt-4"
+        // Reduced mt-4 to mt-1 for a very subtle, professional gap
+        className="inline-flex items-center gap-2 bg-blue-50/50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-widest uppercase mb-6 border border-blue-200/50 dark:border-blue-800/50 backdrop-blur-md shadow-sm mt-1"
       >
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
