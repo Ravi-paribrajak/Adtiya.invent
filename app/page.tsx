@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { Calendar, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 export const revalidate = 0; 
 
@@ -37,12 +38,14 @@ export default async function Home() {
             <Link href={`/project/${project.id}`} key={project.id} className="block group">
               <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col sm:flex-row gap-6 items-center">
                 
-                {/* Thumbnail Image (With Fallback!) */}
-                <div className="w-full sm:w-40 h-40 sm:h-28 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                  <img 
+                {/* Optimized Thumbnail Image (With Fallback!) */}
+                <div className="relative w-full sm:w-40 h-40 sm:h-28 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+                  <Image 
                     src={project.thumbnail_url || project.diagram_url} 
                     alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 640px) 100vw, 160px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 

@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   description: "Arduino project codes, wiring diagrams, and tutorials.",
 };
 
+// This tells mobile browsers to match their top UI bar to your app's background!
+export const themeColor = [
+  { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
+  { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+];
+
 export default function RootLayout({
   children,
 }: Readonly<{
