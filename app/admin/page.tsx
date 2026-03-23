@@ -4,8 +4,7 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase"; 
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { logout } from "@/app/login/actions"; 
-// Removed the deprecated 'Youtube' import, added 'LogOut'
+import { logout, createProject } from "@/app/login/actions"; // Imported createProject
 import { UploadCloud, Image as ImageIcon, Type, Cpu, Code2, CircuitBoard, LogOut } from "lucide-react";
 
 // Custom YouTube SVG
@@ -34,7 +33,7 @@ export default function AdminDashboard() {
     toast.loading("Logging out...", { id: "logout-toast" });
     await logout();
     toast.success("Logged out successfully", { id: "logout-toast" });
-    router.push("/login"); // Instantly boots them back to the login screen
+    router.push("/login"); 
   };
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -54,7 +53,7 @@ export default function AdminDashboard() {
     toast.loading("Uploading Data & Images...", { id: "upload-toast" }); 
 
     try {
-      // 1. Upload Thumbnail
+      // 1. Upload Thumbnail (Client-side storage upload is still okay)
       const thumbName = `thumb_${Date.now()}_${thumbnail.name.replace(/\s+/g, '_')}`;
       const { error: thumbUploadError } = await supabase.storage
         .from('diagrams') 
@@ -76,19 +75,15 @@ export default function AdminDashboard() {
       const { data: diagramUrlData } = supabase.storage.from('diagrams').getPublicUrl(diagramName);
       const diagramUrl = diagramUrlData.publicUrl;
 
-      // 3. Save to Database
-      const { error: dbError } = await supabase
-        .from('projects')
-        .insert([{
-            title: title,
-            video_link: videoLink,
-            code_snippet: codeSnippet,
-            components: components,
-            diagram_url: diagramUrl,
-            thumbnail_url: thumbnailUrl 
-        }]);
-
-      if (dbError) throw dbError;
+      // 3. Save to Database via SECURE SERVER ACTION (Bypasses RLS)
+      await createProject({
+          title: title,
+          video_link: videoLink,
+          code_snippet: codeSnippet,
+          components: components,
+          diagram_url: diagramUrl,
+          thumbnail_url: thumbnailUrl 
+      });
 
       toast.success("Project published successfully!", { id: "upload-toast" });
 
@@ -112,7 +107,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen p-4 md:p-8 pt-24 md:pt-32 pb-24 overflow-x-hidden">
       <div className="max-w-3xl mx-auto">
         
-        {/* Header Section with Logout Button */}
+        {/* Header Section */}
         <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 text-center md:text-left">
           <div>
             <div className="inline-flex items-center gap-2 bg-purple-100/50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold tracking-widest uppercase mb-4 border border-purple-200/50 dark:border-purple-800/50 backdrop-blur-md">
@@ -126,7 +121,6 @@ export default function AdminDashboard() {
             </p>
           </div>
           
-          {/* New Logout Button */}
           <button 
             type="button"
             onClick={handleLogout}
@@ -137,9 +131,7 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Premium Glassmorphic Form Container */}
         <div className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-xl shadow-gray-200/20 dark:shadow-none border border-white/50 dark:border-gray-700/50">
-          
           <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
             
             {/* Project Title */}
@@ -159,7 +151,6 @@ export default function AdminDashboard() {
             {/* Video Link */}
             <div>
               <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
-                {/* Replaced Lucide Youtube with Custom SVG */}
                 <YoutubeIcon className="text-red-500" /> Tutorial Link
               </label>
               <input
@@ -171,9 +162,7 @@ export default function AdminDashboard() {
               />
             </div>
 
-            {/* Components & Code Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {/* Components List */}
               <div>
                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
                   <Cpu size={18} className="text-purple-500" /> Components Used
@@ -187,7 +176,6 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              {/* Code Snippet */}
               <div>
                 <label className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
                   <Code2 size={18} className="text-green-500" /> Source Code
@@ -202,10 +190,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* File Uploads (Responsive Grid) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pt-4 border-t border-gray-200 dark:border-gray-800/50">
-              
-              {/* Thumbnail Upload */}
               <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 p-4 md:p-5 rounded-xl transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20">
                 <label className="flex items-center gap-2 text-sm font-bold text-blue-900 dark:text-blue-400 mb-2">
                   <ImageIcon size={18} /> 1. Home Thumbnail
@@ -218,7 +203,6 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              {/* Diagram Upload */}
               <div className="bg-purple-50/50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-900/30 p-4 md:p-5 rounded-xl transition-colors hover:bg-purple-50 dark:hover:bg-purple-900/20">
                 <label className="flex items-center gap-2 text-sm font-bold text-purple-900 dark:text-purple-400 mb-2">
                   <CircuitBoard size={18} /> 2. Wiring Diagram
@@ -230,10 +214,8 @@ export default function AdminDashboard() {
                   className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-700 dark:file:bg-purple-500 dark:hover:file:bg-purple-600 cursor-pointer transition-all"
                 />
               </div>
-
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isUploading}
@@ -254,7 +236,6 @@ export default function AdminDashboard() {
               )}
             </button>
           </form>
-
         </div>
       </div>
     </div>
