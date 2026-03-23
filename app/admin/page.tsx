@@ -10,6 +10,7 @@ export default function AdminDashboard() {
   const [codeSnippet, setCodeSnippet] = useState("");
   const [diagram, setDiagram] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [components, setComponents] = useState(""); // NEW STATE
   
   const [isUploading, setIsUploading] = useState(false);
 
@@ -67,6 +68,7 @@ export default function AdminDashboard() {
             title: title,
             video_link: videoLink,
             code_snippet: codeSnippet,
+            components: components, // NEW FIELD
             diagram_url: diagramUrl,
             thumbnail_url: thumbnailUrl 
           }
@@ -123,6 +125,18 @@ export default function AdminDashboard() {
               className="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
               placeholder="https://instagram.com/reel/..."
               /* REMOVED: required tag */
+            />
+          </div>
+
+          {/* Components List */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Components Used</label>
+            <p className="text-xs text-gray-500 mb-2">Put each component on a new line.</p>
+            <textarea
+              value={components}
+              onChange={(e) => setComponents(e.target.value)}
+              className="w-full p-2.5 border border-gray-300 dark:border-gray-700 rounded-lg h-32 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
+              placeholder="Arduino Uno&#10;L298N Motor Driver&#10;Ultrasonic Sensor"
             />
           </div>
 

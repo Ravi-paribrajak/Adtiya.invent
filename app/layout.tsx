@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/ThemeProvider"; // NEW IMPORT
+import BackgroundDots from "@/components/BackgroundDots";
 
 export const metadata: Metadata = {
   title: "Ravi's Code & Diagram Hub",
@@ -34,6 +35,8 @@ export default function RootLayout({
             }} 
           />
           {children}
+          <BackgroundDots />
+
         </ThemeProvider>
       </body>
     </html>
