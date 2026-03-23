@@ -1,8 +1,10 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
-import { Calendar, ChevronRight, Mail, Sparkles, FolderOpen } from "lucide-react";
+import { Calendar, ChevronRight, Mail, Sparkles } from "lucide-react";
 import Image from "next/image";
-import ProjectFeed from "@/components/ProjectFeed"; // NEW IMPORT
+import ProjectFeed from "@/components/ProjectFeed";
+import HeroHeader from "@/components/HeroHeader"; // THE NEW ANIMATED HEADER
+import DeveloperFooter from "@/components/DeveloperFooter";
 
 export const revalidate = 0; 
 
@@ -16,41 +18,33 @@ export default async function Home() {
     console.error("Error fetching projects:", error);
   }
 
-  // Split the data: 1 for the Hero Card, the rest for the Bento Grid
   const heroProject = projects?.[0];
   const gridProjects = projects?.slice(1) || [];
 
   return (
-    <main className="min-h-screen p-4 md:p-8">
-      {/* 1. Upgraded Container: max-w-2xl is now max-w-7xl for Desktop! */}
+    <main className="min-h-screen p-4 md:p-8 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* 1. Premium Profile Header */}
-        <div className="text-center mb-16 pt-4">
-          <div className="inline-block bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4 border border-blue-200 dark:border-blue-800">
-            Developer Hub
-          </div>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-950 dark:text-white mb-4 tracking-tight">
-            Code & Diagram Hub
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-            Grab the exact C++ code and wiring diagrams from my tutorials.
-          </p>
-        </div>
+        {/* 1. THE NEW ANIMATED TYPEWRITER HEADER */}
+        <HeroHeader />
 
-        {/* 2. THE HERO CARD (Pinned Latest Project) */}
+        {/* 2. THE S-TIER HERO CARD (Pinned Latest Project) */}
         {heroProject && (
-          <div className="mb-16">
-            <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
-              <Sparkles className="text-blue-500" size={24} /> 
-              Latest Release
-            </h2>
+          <div className="mb-24 relative">
             
-            <Link href={`/project/${heroProject.id}`} className="block group">
-              <div className="bg-white dark:bg-gray-900 rounded-3xl p-4 md:p-8 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 flex flex-col md:flex-row gap-8 items-center">
+            {/* The Gradient Halo Effect behind the card */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-[2.5rem] blur-xl opacity-20 dark:opacity-30"></div>
+            
+            <Link href={`/project/${heroProject.id}`} className="block group relative">
+              <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-[2rem] p-4 md:p-6 shadow-2xl border border-white/50 dark:border-gray-700/50 hover:-translate-y-1 transition-transform duration-500 flex flex-col md:flex-row gap-8 items-center">
                 
-                {/* Huge Desktop Thumbnail */}
-                <div className="relative w-full md:w-3/5 aspect-video flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+                {/* Huge Desktop Thumbnail with Floating Badge */}
+                <div className="relative w-full md:w-[55%] aspect-video flex-shrink-0 overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 shadow-inner">
+                  {/* Floating 'Latest Drop' Badge */}
+                  <div className="absolute top-4 left-4 z-10 bg-black/70 backdrop-blur-md text-white text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-full flex items-center gap-1.5 border border-white/10 shadow-lg">
+                    <Sparkles size={14} className="text-yellow-400" /> Latest Drop
+                  </div>
+                  
                   <Image 
                     src={heroProject.thumbnail_url || heroProject.diagram_url} 
                     alt={heroProject.title}
@@ -61,22 +55,24 @@ export default async function Home() {
                   />
                 </div>
 
-                {/* Hero Content */}
-                <div className="flex-grow w-full flex flex-col justify-center py-4">
-                  <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-4 line-clamp-3">
+                {/* Upgraded Hero Content */}
+                <div className="flex-grow w-full flex flex-col justify-center py-6 md:pr-8">
+                  <h3 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-transparent dark:group-hover:bg-clip-text dark:group-hover:bg-gradient-to-r dark:group-hover:from-blue-400 dark:group-hover:to-purple-400 transition-all duration-300 mb-5 line-clamp-3 leading-tight tracking-tight">
                     {heroProject.title}
                   </h3>
-                  <p className="text-gray-500 dark:text-gray-400 mb-8 line-clamp-2">
-                    Click to view the complete C++ source code, components list, and high-resolution wiring diagram.
+                  <p className="text-gray-500 dark:text-gray-400 mb-8 text-lg line-clamp-2">
+                    Access the complete C++ source code, wiring schematic, and component breakdown for this build.
                   </p>
                   
                   <div className="flex items-center gap-6 mt-auto">
-                    <span className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium">
-                      <Calendar size={18} />
-                      {new Date(heroProject.created_at).toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' })}
+                    <span className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-semibold text-sm">
+                      <Calendar size={16} />
+                      {new Date(heroProject.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
-                    <span className="flex items-center gap-1.5 bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold ml-auto group-hover:bg-blue-700 transition-colors shadow-sm group-hover:shadow-md">
-                      View Project <ChevronRight size={18} />
+                    
+                    {/* SaaS-Style Arrow Button */}
+                    <span className="flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-full font-bold ml-auto group-hover:shadow-lg group-hover:scale-105 transition-all duration-300">
+                      View Blueprint <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </div>
@@ -86,32 +82,13 @@ export default async function Home() {
           </div>
         )}
 
-        {/* 3. THE BENTO GRID & SEARCH (Replaced with our Client Component!) */}
+        {/* 3. THE BENTO GRID & SEARCH */}
         {gridProjects.length > 0 && (
           <ProjectFeed projects={gridProjects} />
         )}
 
         {/* 4. THE DEVELOPER FOOTER */}
-        <footer className="mt-24 border-t border-gray-200 dark:border-gray-800 pt-16 pb-12 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-6 shadow-sm rotate-3 hover:rotate-0 transition-transform duration-300">
-            <Mail size={32} />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
-            Let's build something.
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-8 text-lg">
-            Open for freelance projects, technical writing, and brand sponsorships. 
-          </p>
-          <a 
-            href="mailto:paribrajakravishankarkumar@gmail.com" 
-            target = "_blank"
-            className="group relative inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              <Mail size={20} /> Contact Me
-            </span>
-          </a>
-        </footer>
+        <DeveloperFooter />
 
       </div>
     </main>
